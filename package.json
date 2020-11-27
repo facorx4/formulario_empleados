@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Víctor Robles WEB",
+  "author": "Fabian Cortes",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
