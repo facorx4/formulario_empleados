@@ -33,11 +33,18 @@ var controller = {
         // Validar datos (validator)
         try {
             var validate_tipo_documento = !validator.isEmpty(params.tipo_documento);
-            var validate_cedula = !validator.isEmpty(params.cedula);
+            //var validate_cedula = !validator.isEmpty(params.cedula);
             var validate_nombre = !validator.isEmpty(params.nombre);
             var validate_apellidos = !validator.isEmpty(params.apellidos);
             var validate_genero = !validator.isEmpty(params.genero);
-            var validate_cargo = !validator.isEmpty(params.cargo);
+           /* var validate_cargo = !validator.isEmpty(params.cargo);
+            var validate_n_contrato = !validator.isEmpty(params.n_contrato);
+            var validate_tipo_de_contrato = !validator.isEmpty(params.tipo_de_contrato);
+            var validate_fecha_ingreso = !validator.isEmpty(params.fecha_ingreso);
+            var validate_sueldo = !validator.isEmpty(params.sueldo);
+            var validate_eps = !validator.isEmpty(params.eps);
+            var validate_arl = !validator.isEmpty(params.arl);
+            var validate_observaciones = !validator.isEmpty(params.observaciones);*/
 
 
         } catch (err) {
@@ -47,8 +54,13 @@ var controller = {
             });
         }
 
-        if (validate_tipo_documento && validate_cedula && validate_nombre && validate_apellidos
-            && validate_genero && validate_cargo) {
+  
+
+        if (validate_tipo_documento  && validate_nombre && validate_apellidos && validate_genero 
+            //&& validate_cargo && validate_n_contrato && validate_tipo_de_contrato
+            //&& validate_fecha_ingreso && validate_sueldo && validate_eps && validate_arl
+            //&& validate_observaciones
+            ) {
 
             //Crear el objeto a guardar
             var empleado = new Empleado();
@@ -60,6 +72,13 @@ var controller = {
             empleado.apellidos = params.apellidos;
             empleado.genero = params.genero;
             empleado.cargo = params.cargo;
+            empleado.n_contrato = params.n_contrato;
+            empleado.tipo_de_contrato = params.tipo_de_contrato;
+            empleado.fecha_ingreso = params.fecha_ingreso;
+            empleado.sueldo = params.sueldo;
+            empleado.eps = params.eps;
+            empleado.arl = params.arl;
+            empleado.observaciones = params.observaciones;
 
 
 
@@ -173,11 +192,18 @@ var controller = {
         // Validar datos
         try {
             var validate_tipo_documento = !validator.isEmpty(params.tipo_documento);
-            var validate_cedula = !validator.isEmpty(params.cedula);
+            //var validate_cedula = !validator.isEmpty(params.cedula);
             var validate_nombre = !validator.isEmpty(params.nombre);
             var validate_apellidos = !validator.isEmpty(params.apellidos);
             var validate_genero = !validator.isEmpty(params.genero);
-            var validate_cargo = !validator.isEmpty(params.cargo);
+            /*var validate_cargo = !validator.isEmpty(params.cargo);
+            var validate_n_contrato = !validator.isEmpty(params.n_contrato);
+            var validate_tipo_de_contrato = !validator.isEmpty(params.tipo_de_contrato);
+            var validate_fecha_ingreso = !validator.isEmpty(params.fecha_ingreso);
+            var validate_sueldo = !validator.isEmpty(params.sueldo);
+            var validate_eps = !validator.isEmpty(params.eps);
+            var validate_arl = !validator.isEmpty(params.arl);
+            var validate_observaciones = !validator.isEmpty(params.observaciones);*/
         } catch (err) {
             return res.status(200).send({
                 status: 'error',
@@ -185,8 +211,11 @@ var controller = {
             });
         }
 
-        if (validate_tipo_documento && validate_cedula && validate_nombre && validate_apellidos
-            && validate_genero && validate_cargo) {
+        if (validate_tipo_documento  && validate_nombre && validate_apellidos && validate_genero 
+            //&& validate_cargo && validate_n_contrato && validate_tipo_de_contrato
+            //&& validate_fecha_ingreso &&  validate_sueldo && validate_eps && validate_arl
+            //&&  validate_observaciones
+            ) {
             // Find and update
             Empleado.findOneAndUpdate({ _id: empleadoId }, params, { new: true }, (err, empleadoUpdated) => {
                 if (err) {
@@ -241,9 +270,9 @@ var controller = {
             return res.status(200).send({
                 status: 'success',
                 article: empleadoRemoved
-           });
+            });
 
-        }); 
+        });
     },
 
     upload: (req, res) => {
@@ -252,7 +281,7 @@ var controller = {
         // Recoger el fichero de la petición
         var file_name = 'Imagen no subida...';
 
-        if(!req.files){
+        if (!req.files) {
             return res.status(404).send({
                 status: 'error',
                 message: file_name
@@ -274,8 +303,8 @@ var controller = {
         var file_ext = extension_split[1];
 
         // Comprobar la extension, solo imagenes, si es valida borrar el fichero
-        if(file_ext != 'png' && file_ext != 'jpg' && file_ext != 'jpeg' && file_ext != 'gif'){
-            
+        if (file_ext != 'png' && file_ext != 'jpg' && file_ext != 'jpeg' && file_ext != 'gif') {
+
             // borrar el archivo subido
             fs.unlink(file_path, (err) => {
                 return res.status(200).send({
@@ -283,16 +312,16 @@ var controller = {
                     message: 'La extensión de la imagen no es válida !!!'
                 });
             });
-        
-        }else{
-             // Si todo es valido, sacando id de la url
-             var empleadoId = req.params.id;
 
-             if(empleadoId){
+        } else {
+            // Si todo es valido, sacando id de la url
+            var empleadoId = req.params.id;
+
+            if (empleadoId) {
                 // Buscar el articulo, asignarle el nombre de la imagen y actualizarlo
-                Empleado.findOneAndUpdate({_id: empleadoId}, {image: file_name}, {new:true}, (err, empleadoUpdated) => {
+                Empleado.findOneAndUpdate({ _id: empleadoId }, { image: file_name }, { new: true }, (err, empleadoUpdated) => {
 
-                    if(err || !empleadoUpdated){
+                    if (err || !empleadoUpdated) {
                         return res.status(200).send({
                             status: 'error',
                             message: 'Error al guardar la imagen del empleado !!!'
@@ -304,24 +333,24 @@ var controller = {
                         empleado: empleadoUpdated
                     });
                 });
-             }else{
+            } else {
                 return res.status(200).send({
                     status: 'success',
                     image: file_name
                 });
-             }
-            
-        }   
+            }
+
+        }
     }, // end upload file
 
     getImage: (req, res) => {
         var file = req.params.image;
-        var path_file = './upload/empleados/'+file;
+        var path_file = './upload/empleados/' + file;
 
         fs.exists(path_file, (exists) => {
-            if(exists){
+            if (exists) {
                 return res.sendFile(path.resolve(path_file));
-            }else{
+            } else {
                 return res.status(404).send({
                     status: 'error',
                     message: 'La imagen no existe !!!'
@@ -336,37 +365,39 @@ var controller = {
         //var searchNumber = rer.params.search;
 
         // Find or
-        Empleado.find({ "$or": [
-            { "nombre": { "$regex": searchString, "$options": "i"}},
-            { "apellidos": { "$regex": searchString, "$options": "i"}},
-            { "cargo": { "$regex": searchString, "$options": "i"}},
-            { "genero": { "$regex": searchString, "$options": "i"}},
-            //{ "cedula": { "$regex": searchNumber, "$options": "i"}},
-            
-        ]})
-        .sort([['date', 'descending']])
-        .exec((err, empleados) => {
+        Empleado.find({
+            "$or": [
+                { "nombre": { "$regex": searchString, "$options": "i" } },
+                { "apellidos": { "$regex": searchString, "$options": "i" } },
+                //{ "cargo": { "$regex": searchString, "$options": "i"}},
+                //{ "genero": { "$regex": searchString, "$options": "i"}},
+                //{ "cedula": { "$regex": searchNumber, "$options": "i"}},
 
-            if(err){
-                return res.status(500).send({
-                    status: 'error',
-                    message: 'Error en la petición !!!'
-                });
-            }
-            
-            if(!empleados || empleados.length <= 0){
-                return res.status(404).send({
-                    status: 'error',
-                    message: 'No hay empleados que coincidan con tu busqueda !!!'
-                });
-            }
+            ]
+        })
+            .sort([['date', 'descending']])
+            .exec((err, empleados) => {
 
-            return res.status(200).send({
-                status: 'success',
-                empleados
+                if (err) {
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'Error en la petición !!!'
+                    });
+                }
+
+                if (!empleados || empleados.length <= 0) {
+                    return res.status(404).send({
+                        status: 'error',
+                        message: 'No hay empleados que coincidan con tu busqueda !!!'
+                    });
+                }
+
+                return res.status(200).send({
+                    status: 'success',
+                    empleados
+                });
+
             });
-
-        });
     }
 
 };  // end controller
